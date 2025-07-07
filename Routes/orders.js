@@ -1,38 +1,36 @@
 const express = require('express');
 const ordersRoute = express.Router();
 const mongoose = require('mongoose'); 
-const order = require('../modals/order')
+const order = require('../modals/order');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-
-
-
 const { OrderItem } = require('../modals/orderItems');
 
 ordersRoute.get('/', async (req, res) => {
-  const ordersList = await order.find().populate('user', 'name').populate({
-    path: 'orderItems',
-    populate: {
-      path: 'product',
-      model: 'productSchema'
-    }
-  })
+  const ordersList = await order.find()
+    .populate('user', 'name')
+    .populate({
+      path: 'orderItems',
+      populate: {
+        path: 'product',
+        model: 'productSchema'
+      }
+    });
   if (!ordersList) {
-      
     res.status(500).send({
-      success:false,
-      message:"Internal Server Error !!"})
+      success: false,
+      message: "Internal Server Error !!"
+    });
   } else {
     res.status(200).json({
-      orders:ordersList
-    })
+      orders: ordersList
+    });
   }
+});
 
-  
-})  
-  
 ordersRoute.get("/:id", async (req, res) => {
-  const orders = await order.findById().populate('user', 'name')
+  const orders = await order.findById()
+    .populate('user', 'name')
     .populate({
       path: 'orderItems',
       populate: { path: 'orders', populate: 'category' }
@@ -40,24 +38,20 @@ ordersRoute.get("/:id", async (req, res) => {
   if (!orders) {
     res.status(500).send({
       message: "Internal Server Error",
-      success:false
-    })
-  }
-  else {
+      success: false
+    });
+  } else {
     res.status(201).json({
-      order:order
-    })
+      order: order
+    });
   }
-
-}) 
- 
- // Razorpay Instance
-const razorpay = new Razorpay({
-  key_id: 'rzp_test_IWc5S3RoO1MUeC', // Replace with your Razorpay Key ID
-  key_secret: 'er445VEHW7bB8hbO6yWliyMN' // Replace with your Razorpay Key Secret
 });
 
-// Create Razorpay order
+const razorpay = new Razorpay({
+  key_id: 'rzp_test_IWc5S3RoO1MUeC',
+  key_secret: 'er445VEHW7bB8hbO6yWliyMN'
+});
+
 ordersRoute.post('/payment/order', async (req, res) => {
   try {
     const options = {
@@ -66,7 +60,6 @@ ordersRoute.post('/payment/order', async (req, res) => {
       receipt: 'receipt_order_' + Date.now()
     };
     const order = await razorpay.orders.create(options);
-    console.log("orderd:",order)
     res.status(200).json({ success: true, order });
   } catch (error) {
     console.error(error);
@@ -74,11 +67,9 @@ ordersRoute.post('/payment/order', async (req, res) => {
   }
 });
 
-// Verify Razorpay Payment
 ordersRoute.post('/payment/verify', async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-      req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const sign = razorpay_order_id + '|' + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac('sha256', razorpay.key_secret)
@@ -98,8 +89,6 @@ ordersRoute.post('/payment/verify', async (req, res) => {
 
 ordersRoute.post('/create', async (req, res) => {
   try {
-    // 1. Save OrderItems and get their IDs
-    console.log(req.body.items)
     const orderItemsIds = await Promise.all(
       req.body.items.map(async (item) => {
         const newOrderItem = new OrderItem({
@@ -111,7 +100,6 @@ ordersRoute.post('/create', async (req, res) => {
       })
     );
 
-    // 2. Calculate total price
     const totalPrices = await Promise.all(
       orderItemsIds.map(async (orderItemId) => {
         const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
@@ -122,7 +110,6 @@ ordersRoute.post('/create', async (req, res) => {
 
     const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
 
-    // 3. Create the order
     const newOrder = new order({
       orderItems: orderItemsIds,
       shippingAddress1: req.body.shippingAddress1,
@@ -143,39 +130,36 @@ ordersRoute.post('/create', async (req, res) => {
     }
 
     res.status(201).json(savedOrder);
-    console.log(savedOrder);
   } catch (error) {
     console.error('order creation failed:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-})
-   
+});
+
 ordersRoute.put('/', async (req, res) => {
   const order = await order.findByIdAndupdate(
     req.params.id,
     {
       status: req.body.status
-    },{new: true}
-  )
-  if(!orders) {
-    return res.status(400).send('the order cannot be upadte!')
+    },
+    { new: true }
+  );
+  if (!orders) {
+    return res.status(400).send('the order cannot be upadte!');
   } else {
     res.status(201).send(order);
   }
-})  
- 
+});
+
 ordersRoute.delete('/delete/:id', async (req, res) => {
   try {
     const deletedOrder = await order.findByIdAndRemove(req.params.id);
-
     if (deletedOrder) {
-      // Delete all orderItems linked to this order
       await Promise.all(
         deletedOrder.orderItems.map(async (orderItemId) => {
           await OrderItem.findByIdAndRemove(orderItemId);
         })
       );
-
       return res.status(200).json({
         success: true,
         message: 'The order is deleted!'
@@ -200,41 +184,35 @@ ordersRoute.get('/get/totalsales', async (req, res) => {
     {
       $group: {
         _id: null,
-        totalsales:{
-           $sum:"$totalPrice"
-        }
+        totalsales: { $sum: "$totalPrice" }
       }
     }
-   
-  ])  
+  ]);
   if (!totalSales) {
-    return res.status(400).send('the order slaes cannot be generated')
-  } 
-  res.send({ totalSales: totalSales.pop().totalsales})
-})
+    return res.status(400).send('the order sales cannot be generated');
+  }
+  res.send({ totalSales: totalSales.pop().totalsales });
+});
 
-ordersRoute.get('/get/count', async(req, res) => {
-  const orderCount = await order.countDocuments(
-    (Count=>Count)
-  ) 
+ordersRoute.get('/get/count', async (req, res) => {
+  const orderCount = await order.countDocuments();
   if (!orderCount) {
     res.status(500).send("Internal Server Error");
   } else {
-    res.status(201).send(orderCount);
+    res.status(201).send(orderCount.toString());
   }
-})
+});
+
 ordersRoute.get(`/get/userorders/:userid`, async (req, res) => {
-    const userOrderList = await order.find({user: req.params.userid}).populate({ 
-        path: 'orderItems', populate: {
-            path : 'product', populate: 'category'} 
-        }).sort({'dateOrdered': -1});
+  const userOrderList = await order.find({ user: req.params.userid }).populate({
+    path: 'orderItems',
+    populate: { path: 'product', populate: 'category' }
+  }).sort({ 'dateOrdered': -1 });
 
-    if(!userOrderList) {
-        res.status(500).json({success: false})
-    } 
-    res.send(userOrderList);
-}) 
-
-
+  if (!userOrderList) {
+    res.status(500).json({ success: false });
+  }
+  res.send(userOrderList);
+});
 
 module.exports = ordersRoute;
