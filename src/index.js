@@ -44,7 +44,7 @@ app.use('/api/v2/order', ordersRoute)
 app.use('/api/v6/cart', cartRoute);
 app.use('/api/v4', categoriesRoute)
 app.use('/api/v5',isAdminRoute)
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 
 app.listen(PORT, () => {
