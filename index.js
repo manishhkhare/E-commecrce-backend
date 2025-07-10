@@ -11,10 +11,10 @@ const usersRoute = require('./Routes/users');
 const ordersRoute = require('./Routes/orders');
 const { isAdminRoute } = require('./Routes/adminRoute');
 const cartRoute = require('./Routes/cart');
-const env = require('dotenv').config();
+
 const authjwt = require('./helpers/expressjwt');
  
- console.log("dorenv",env)
+
 const allowOrigin = [
     'http://localhost:3001',
     'http://localhost:3000',
@@ -46,7 +46,7 @@ app.use('/api/v2/order', ordersRoute)
 app.use('/api/v6/cart', cartRoute);
 app.use('/api/v4', categoriesRoute)
 app.use('/api/v5',isAdminRoute)
-const PORT = process.env.PORT || 3000;
+const PORT =3000;
 
 
 app.listen(PORT, () => {
