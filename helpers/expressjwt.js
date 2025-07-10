@@ -1,8 +1,8 @@
 const { expressjwt: jwt } = require("express-jwt");
-const env = require('dotenv').config();
 
 function authjwt() {
-  const secret = process.env.KEY;
+  const secret=process.env.KEY;
+  console.log(secret)
   if (!secret) {
         throw new Error("JWT Secret KEY is not defined in environment variables.");
     }
