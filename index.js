@@ -19,6 +19,7 @@ const allowOrigin = [
     'http://localhost:3001',
     'http://localhost:3000',
     'http://localhost:5173',
+    'https://stellar-twilight-68c5d8.netlify.app/'
 ];
 
 
@@ -52,7 +53,6 @@ app.get('/', (req, res) => {
 
 });
 const PORT =3000;
-
 
 app.listen(PORT, () => {
     console.log(`application are running on ${PORT}`)
