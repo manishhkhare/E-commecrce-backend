@@ -8,7 +8,7 @@ function authjwt() {
         isRevoked: isRevoked  // Uncomment if needed
     }).unless({
       path: [
-    { url: '/', methods: ['GET'] },
+    { url: '/', methods: ['GET','HEAD'] },
     { url: /\/api\/v1\/product(.*)/, methods: ['GET', 'OPTIONS'] },
     { url: /\/api\/v1\/orders(.*)/, methods: ['GET', 'OPTIONS'] },
     { url: /\/api\/v3\/user\/login/, methods: ['POST'] },

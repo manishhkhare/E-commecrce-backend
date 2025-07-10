@@ -45,7 +45,12 @@ app.use('/api/v1/Product',productRoute)
 app.use('/api/v2/order', ordersRoute)
 app.use('/api/v6/cart', cartRoute);
 app.use('/api/v4', categoriesRoute)
-app.use('/api/v5',isAdminRoute)
+app.use('/api/v5', isAdminRoute);
+
+app.get('/', (req, res) => {
+ res.json({ status: 'success', message: 'API is live' });
+
+});
 const PORT =3000;
 
 
