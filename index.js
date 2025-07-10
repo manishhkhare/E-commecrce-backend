@@ -9,10 +9,12 @@ const productRoute = require('./Routes/products');
 const categoriesRoute = require('./Routes/categories');
 const usersRoute = require('./Routes/users');
 const ordersRoute = require('./Routes/orders');
-const authjwt = require('./helpers/expressjwt');
 const { isAdminRoute } = require('./Routes/adminRoute');
 const cartRoute = require('./Routes/cart');
 const env = require('dotenv').config();
+const authjwt = require('./helpers/expressjwt');
+ 
+ console.log("dorenv",env)
 const allowOrigin = [
     'http://localhost:3001',
     'http://localhost:3000',
