@@ -1,7 +1,7 @@
 const { expressjwt: jwt } = require("express-jwt");
 
 function authjwt() {
-  const secret=process.env.KEY;
+  const secret="KEY";
     return jwt({
         secret,
         algorithms: ['HS256'],

@@ -7,4 +7,4 @@ services:
     startCommand: "npm start"
     envVars:
       PORT: 3000
-      KEY: mykey
+
