@@ -11,7 +11,7 @@ const usersRoute = require('./Routes/users');
 const ordersRoute = require('./Routes/orders');
 const authjwt = require('./helpers/expressjwt');
 const { isAdminRoute } = require('./Routes/adminRoute');
-const  cartRoute  = require('./Routes/Cart');
+const cartRoute = require('./Routes/Cart');
 const env = require('dotenv').config();
 const allowOrigin = [
     'http://localhost:3001',
