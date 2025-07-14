@@ -17,7 +17,8 @@ const allowOrigin = [
     'http://localhost:3001',
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://e-commecrce-backend-14.onrender.com/'
+    'https://e-commecrce-backend-14.onrender.com/',
+    'https://shopping-cart-five-ebon.vercel.app'
 ];
 
 app.use(morgan('dev'));
@@ -33,7 +34,7 @@ app.use(cors({
 }));
 
 app.get('/', (req, res) => {
-  res.send('Server is running!');
+  res.send('Server is running !!');
 });
 
 app.use('/api/v3/user', usersRoute)
