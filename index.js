@@ -4,14 +4,16 @@ const mongoose = require('mongoose')
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
-const { dataBase } = require('../config/db');
-const productRoute = require('../Routes/products');
-const categoriesRoute = require('../Routes/categories');
-const usersRoute = require('../Routes/users');
-const ordersRoute = require('../Routes/orders');
-const authjwt = require('../helpers/expressjwt');
-const { isAdminRoute } = require('../Routes/adminRoute');
-const { cartRoute } = require('../Routes/cart');
+const { dataBase } = require('./config/db');
+const productRoute = require('./Routes/products');
+const categoriesRoute = require('./Routes/categories');
+const usersRoute = require('./Routes/users');
+const ordersRoute = require('./Routes/orders');
+const { isAdminRoute } = require('./Routes/adminRoute');
+const cartRoute = require('./Routes/cart');
+
+const authjwt = require('./helpers/expressjwt');
+ 
 const env = require('dotenv').config();
 const allowOrigin = [
     'http://localhost:3001',
@@ -35,7 +37,7 @@ app.use(cors({
 }));
 
 app.use('/api/v3/user', usersRoute)
-app.use('/public/uploads', express.static(path.join(__dirname, '../public/uploads')));
+app.use('/public/uploads', express.static(path.join(__dirname, './public/uploads')));
 ; 
 console.log(path.join(__dirname, '/public/uploads'))
 app.use(authjwt());

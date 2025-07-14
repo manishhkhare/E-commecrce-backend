@@ -87,4 +87,4 @@ cartRoute.get('/get', async (req, res) => {
 
 
 
-module.exports = { cartRoute }
+module.exports = cartRoute;

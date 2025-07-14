@@ -1,22 +1,21 @@
 const { expressjwt: jwt } = require("express-jwt");
 
 function authjwt() {
-    const secret = process.env.secret;
-    
+  const secret="mykey";
     return jwt({
         secret,
         algorithms: ['HS256'],
         isRevoked: isRevoked  // Uncomment if needed
     }).unless({
       path: [
-        { url: '/', methods: ['GET'] },
+    { url: '/', methods: ['GET','HEAD'] },
     { url: /\/api\/v1\/product(.*)/, methods: ['GET', 'OPTIONS'] },
     { url: /\/api\/v1\/orders(.*)/, methods: ['GET', 'OPTIONS'] },
-        { url: /\/api\/v3\/user\/login/, methods: ['POST'] },
+    { url: /\/api\/v3\/user\/login/, methods: ['POST'] },
         // { url: /\/api\/v6\/cart\/add/, methods: ['POST'] },
     { url: /\/api\/v3\/user\/registration/, methods: ['POST'] },
         // { url: /\/api\/v3\/user\/count/, methods: ['GET'] },
-        { url: /\/public\/uploads(.*)/, methods: ['GET'] },
+    { url: /\/public\/uploads(.*)/, methods: ['GET'] },
     { url: /\/api\/v5\/admin-register/, methods:[ 'POST'], },
         ]
     });

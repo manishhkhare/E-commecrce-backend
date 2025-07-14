@@ -2,14 +2,13 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 
- const url = "mongodb+srv://Manish:khare@cluster0.gpi036a.mongodb.net/e-shop?retryWrites=true&w=majority";
- const dataBase = mongoose.connect(url)
-  .then(() => {
-    console.log('Connected to MongoDB Atlas');
-  })
-  .catch(err => {
-    console.error('Error connecting to MongoDB Atlas:', err);
-  });  
+const dataBase = mongoose.connect("mongodb+srv://Manish:khare@cluster0.gpi036a.mongodb.net/")
+    .then(() => {
+        console.log('connected to mongo Altas')
+    }).catch(err => {
+        console.log(err);
+     }
+    )  
 
 module.export = { dataBase };
     

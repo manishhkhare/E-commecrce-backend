@@ -1,12 +1,14 @@
-function errorhandler(err, req, res, next) {
-    if (err.name === 'UnauthorizedError') {
-        return res.status(401).json({ message: 'Unauthorized access. Invalid or missing token.' });
-    }
+const { UnauthorizedError } = require("express-jwt");
 
-    if (err.name === 'ValidationError') {
-        return res.status(400).json({ message: err.message });
-    }
+function errorhandler(err, res, req, next) {
+    if (err.name === UnauthorizedError) {
+        res.status(401).send('unauthorizedError');
 
-    // Default to 500 server error
-    return res.status(500).json({ message: 'Internal Server Error' });
+    }
+    if (err.name === ValidationError) {
+        res.status(401).send("vailidation error")
+    }
+    else {
+        res.status(500).send('server error');
+    }
 }

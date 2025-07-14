@@ -39,7 +39,7 @@ usersRoute.post('/registeration', async(req, res) => {
     usersRoute.post('/login', async (req, res) => {
       const userDetail = await user.findOne({ email: req.body.email });
       console.log(userDetail.passwordHash)
-      const secret = process.env.secret;
+      const secret = "mykey";
       const isValidPassword = await bcrypt.compareSync(req.body.password, userDetail.passwordHash)  
        console.log(userDetail)
       const token = jwt.sign(
@@ -122,6 +122,6 @@ usersRoute.get("/count", async (req,res) => {
    
  })
     
-  
+ module.exports = usersRoute;
+        
     
-module.exports = usersRoute;
