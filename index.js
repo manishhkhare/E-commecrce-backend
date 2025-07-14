@@ -11,20 +11,16 @@ const usersRoute = require('./Routes/users');
 const ordersRoute = require('./Routes/orders');
 const { isAdminRoute } = require('./Routes/adminRoute');
 const cartRoute = require('./Routes/cart');
-
 const authjwt = require('./helpers/expressjwt');
- 
 const env = require('dotenv').config();
 const allowOrigin = [
     'http://localhost:3001',
     'http://localhost:3000',
     'http://localhost:5173',
+    'https://e-commecrce-backend-14.onrender.com/'
 ];
 
-
-
 app.use(morgan('dev'));
-
 app.use(express.json());
 app.use(cors({
     origin: function(origin, callback) {
@@ -36,9 +32,12 @@ app.use(cors({
     }
 }));
 
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
 app.use('/api/v3/user', usersRoute)
 app.use('/public/uploads', express.static(path.join(__dirname, './public/uploads')));
-; 
 console.log(path.join(__dirname, '/public/uploads'))
 app.use(authjwt());
 app.use('/api/v1/Product',productRoute)
